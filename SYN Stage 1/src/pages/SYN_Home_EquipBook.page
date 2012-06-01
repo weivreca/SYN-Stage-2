@@ -1,10 +1,21 @@
 <apex:page showHeader="false" id="equipmentbooking" standardStylesheets="false" controller="SYN_eventsJSONController_v2">
+
+<!--
+    Created by TrueCloud Consulting
+    
+    Equipment booking page
+    History:
+    
+
+-->
+
+
+
 <head>
 <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'SiteStyles.css')}"/>
 <apex:stylesheet value="{!URLFOR($Resource.SYN_UITheme)}"/>
 <apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.css')}"/>
 <apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'themes/base/jquery.ui.all.css')}"/>
-<!--<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.print.css')}"/>-->
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-ui-1.8.17.custom.min.js')}"/>
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.min.js')}"/>
@@ -13,10 +24,7 @@
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'external/jquery.bgiframe-2.1.2.js')}"/>
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.core.js')}"/>
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.widget.js')}"/>
-<!-- <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.draggable.js')}"/> -->
 <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.position.js')}"/>
-<!--  <apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.resizable.js')}"/> -->
-
 <script type='text/javascript'>
     
     function setResVar(){
@@ -26,13 +34,8 @@
     };
     
     function setProgVar(){
-        //alert('In ProgVar');
         prog = document.getElementById('equipmentbooking:theform:theProgSelection').value;
-        //alert(prog);
-        //window.location.href ="/SYN_Home_EquipBook?type=equipment&r=" + sel;
     };
-    
-    //$j = jQuery.noConflict();
     
     $(function() {
         // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
@@ -92,7 +95,6 @@
                 {
                     var sdt = $.fullCalendar.formatDate( start, 'dd/MM/yyyy hh:mm TT' );
                     var edt = $.fullCalendar.formatDate( end, 'dd/MM/yyyy hh:mm TT' );
-                    //$("#dialog-message").dialog('open');
                     // check overlap, duration, maxbookings
                     prog = document.getElementById('equipmentbooking:theform:theProgSelection').value;
                     SYN_eventsJSONController_v2.validateBookingCreate(sdt,edt,sel,allDay,prog,function(result,event)
