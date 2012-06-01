@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>CombinedRollupFieldset__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Concatenated fields used during rollups to locate the most recent opportunity.</description>
+        <externalId>false</externalId>
+        <formula>TEXT(CloseDate) + &apos;;|;&apos;+ TEXT(Amount) + &apos;;|;&apos;+ TEXT(npe01__Member_Level__c) + &apos;;|;&apos;+ TEXT(npe01__Membership_Origin__c) + &apos;;|;&apos; +  Id</formula>
+        <inlineHelpText>Concatenated fields used during rollups to locate the most recent opportunity.</inlineHelpText>
+        <label>Combined Rollup Fieldset</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CurrentGenerators__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Current Generator(s) - DEPRECATED</label>
+        <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DeliveryInstallationStatus__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Delivery/Installation Status- DEPRECATED</label>
+        <picklist>
+            <picklistValues>
+                <fullName>In progress</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Yet to begin</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>MainCompetitors__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Main Competitor(s) - DEPRECATED</label>
+        <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OrderNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Order Number - DEPRECATED</label>
+        <length>8</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TrackingNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Tracking Number - DEPRECATED</label>
+        <length>12</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>systemHouseholdContactRoleProcessor__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Controls if Household contact roles are created for Opportunities</inlineHelpText>
+        <label>_SYSTEM: HOUSEHOLD CONTACT ROLEPROCESSOR</label>
+        <picklist>
+            <picklistValues>
+                <fullName>All Opportunities</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No Opportunities</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+</CustomObject>

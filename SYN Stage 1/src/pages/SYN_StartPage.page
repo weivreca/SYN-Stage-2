@@ -1,0 +1,9 @@
+<apex:page standardStylesheets="false" showHeader="false">
+  <!-- Begin Default Content REMOVE THIS -->
+  SYN Bookings Portal Start Page<br/><br/>
+  To login to portal click <a href="/sitelogin?StartURL=/SYN_Home">here</a>
+  <br/>
+  <br/>
+  To view the Schools on Air schedule click <a href="/SYN_SOA">here</a>
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

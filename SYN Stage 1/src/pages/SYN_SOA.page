@@ -1,0 +1,115 @@
+<apex:page showHeader="false" id="SOAcalendar" standardStylesheets="false" controller="SYN_SOAController">
+<head>
+<apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'SiteStyles.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_UITheme)}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'themes/base/jquery.ui.all.css')}"/>
+<!--<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.print.css')}"/>-->
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-ui-1.8.17.custom.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.dialog.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'external/jquery.bgiframe-2.1.2.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.core.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.widget.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.position.js')}"/>
+
+<script type='text/javascript'>
+    
+    $(document).ready(function() {
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            minTime: 8,
+            maxTime: 18,
+            allDaySlot: false,
+            defaultView: 'agendaWeek',
+            
+            slotMinutes:60,
+            selectable:false, 
+            selectHelper: true,
+            editable: false,
+            events: function(start, end, callback) {
+                // using jscript remoting to pull sf booking data
+                var s = $.fullCalendar.formatDate( start, 'MM-dd-yyyy hh:mm:ss' );
+                var e = $.fullCalendar.formatDate( end, 'MM-dd-yyyy hh:mm:ss' );
+                
+                SYN_SOAController.getBookings(s,e,'equipment','a0QN000000099xY', function(result,event){
+                    events = [];
+                    if(result != null){
+                            for(i=0;i<result.length;i++){
+                                
+                                events.push({ title: (result[i].UserIsOwner__c == 'TRUE')?'[X] ' + result[i].Booking_Name__c + '\n' + result[i].Program__r.Name
+                                					 :result[i].Booking_Name__c + '\n' + result[i].Program__r.Name,
+                                              start: result[i].start__c,
+                                              end: result[i].end__c,
+                                              allDay : false,
+                                              color: (result[i].UserIsOwner__c == 'TRUE')?'blue':'#333333',
+                                              editable: (result[i].UserIsOwner__c == 'TRUE')?true:false,
+                                              id:result[i].Id,
+                                              isOwner:result[i].UserIsOwner__c,
+                                              tooltip: 'Click on the X to delete',
+                                              userID:result[i].CreatedById,
+                                              program:result[i].Program__r.Name,
+                                            });
+                            }
+                    }
+                    callback(events);
+                },{escape:true});
+            }
+        
+        });
+    });
+    
+    
+</script>
+<style type='text/css'>
+
+    body {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        }
+
+    #calendar {
+        width: 900px;
+        margin: 0 auto;
+        }
+
+</style>
+</head>
+  <apex:insert name="header">
+    <c:SYN_SOASiteHeader />
+    <hr/>
+  </apex:insert>
+  
+  <apex:insert name="body"/>
+          <apex:form id="theform">
+        <apex:outputPanel id="sel">
+        </apex:outputPanel>
+          <table width="1000px" id="theTable">
+                <tr>
+                    <td>
+                        <h2>School of the Air Calendar</h2>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td width="800px">
+                        <div id='calendar'></div>
+                    </td>
+                    <apex:outputPanel id="panel"></apex:outputPanel>
+                </tr>
+            </table>
+    </apex:form>
+    
+  <apex:insert name="footer">
+    <hr/>
+    <c:SiteFooter />
+  </apex:insert>
+</apex:page>

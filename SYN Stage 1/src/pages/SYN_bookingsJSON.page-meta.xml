@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>24.0</apiVersion>
+    <description>returns a list of bookings in format required by fullCalendar</description>
+    <label>SYN_bookingsJSON</label>
+</ApexPage>

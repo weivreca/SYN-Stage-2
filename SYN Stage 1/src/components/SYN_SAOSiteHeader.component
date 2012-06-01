@@ -1,0 +1,10 @@
+<apex:component id="headerComponent">
+    <table width="1000px">
+        <tr>
+            <td><apex:image url="{!URLFOR($Resource.SYN_Resources, 'images/synfm_logo.png')}"/></td>
+        </tr>
+        <tr>
+            <td><a href="SYN_Home">Home</a></td>
+        </tr>
+    </table>
+</apex:component>

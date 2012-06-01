@@ -1,0 +1,286 @@
+<apex:page showHeader="false" id="equipmentbooking" standardStylesheets="false" controller="SYN_eventsJSONController">
+<head>
+<apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'SiteStyles.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_UITheme)}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'themes/base/jquery.ui.all.css')}"/>
+<!--<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.print.css')}"/>-->
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-ui-1.8.17.custom.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.dialog.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'external/jquery.bgiframe-2.1.2.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.core.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.widget.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.draggable.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.position.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'ui/jquery.ui.resizable.js')}"/>
+
+<script type='text/javascript'>
+    
+    function alerterr(){
+        alert('An error has occured');
+        return;
+    }
+    
+    //$j = jQuery.noConflict();
+    
+    $(function() {
+        // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+    
+        $( "#dialog-message" ).dialog({
+            resizable: false,
+            height:400,
+            width:600,
+            modal: true,
+            autoOpen: false,
+            buttons: {
+                OK: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+    });
+    
+    
+    
+    $(document).ready(function() {
+        document.getElementById('equipmentbooking:theform:theSelection').value = '{!sel}';
+        var sel = '{!sel}';
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        var res = '{!resourceLabel}';
+        
+        //
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+            minTime: 6,
+            defaultView: 'agendaWeek',
+            slotMinutes:60,
+            selectable:(sel=='')?false:true, 
+            selectHelper: true,
+            
+            select: function(start, end, allDay) 
+                {
+                    var sdt = $.fullCalendar.formatDate( start, 'dd/MM/yyyy hh:mm TT' );
+                    var edt = $.fullCalendar.formatDate( end, 'dd/MM/yyyy hh:mm TT' );
+                    $("#dialog-message").dialog('open');
+                    // check overlap, duration, maxbookings
+                    SYN_eventsJSONController.validateBookingCreate(sdt,edt,sel,function(result,event)
+                    {
+                        if(result == 'TRUE')
+                        {
+                            SYN_eventsJSONController.createBooking(sdt,edt,'Equipment',sel,function(result,event)
+                            {
+                                if(result != 'ERROR'){
+                                    event.id = result;
+                                    alert('Booking created');
+                                    calendar.fullCalendar('unselect');
+                                    calendar.fullCalendar('refetchEvents');
+                                } else {
+                                    alerterr();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            alerterr();
+                        }                
+                    });
+                }
+            ,
+            eventResize: function(event,dayDelta,minuteDelta,allDay,revertFunc) 
+                { 
+                    var sdt = $.fullCalendar.formatDate( event.start, 'dd/MM/yyyy hh:mm TT' );
+                    var edt = $.fullCalendar.formatDate( event.end, 'dd/MM/yyyy hh:mm TT' );
+                    var bId = event.id;
+                    
+                    SYN_eventsJSONController.validateBookingResize(sdt,edt,bId,function(result,event)
+                    {
+                        if(result=='TRUE')
+                        {
+                            SYN_eventsJSONController.updateBooking(sdt,edt,bId,function(result,event)
+                            { 
+                                if(result != 'ERROR' && result != null){
+                                    alert('Booking updated');
+                                    calendar.fullCalendar('unselect');
+                                    calendar.fullCalendar('refetchEvents');
+                                } else {
+                                    alerterr();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            alerterr();
+                        }
+                    });
+                }
+            , 
+            eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) 
+                { 
+                    var sdt = $.fullCalendar.formatDate( event.start, 'dd/MM/yyyy hh:mm TT' );
+                    var edt = $.fullCalendar.formatDate( event.end, 'dd/MM/yyyy hh:mm TT' );
+                    var bId = event.id;
+                    
+                    SYN_eventsJSONController.validateBookingDrop(sdt,edt,bId,function(result,event)
+                    {
+                        if(result=='TRUE')
+                        {
+                            SYN_eventsJSONController.updateBooking(sdt,edt,bId,function(result,event)
+                            { 
+                                if(result != 'ERROR' && result != null){
+                                    alert('Booking updated');
+                                    calendar.fullCalendar('unselect');
+                                    calendar.fullCalendar('refetchEvents');
+                                } else {
+                                    alerterr();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            alerterr();
+                        }
+                    });
+                }  
+            , 
+            eventClick: function(calEvent, jsEvent, view)
+            {
+                if(calEvent.isOwner=='TRUE')
+                {
+                     if(confirm('Are you sure you want to delete your booking?'))
+                     {
+                        SYN_eventsJSONController.deleteBooking(calEvent.id,function(result,event)
+                        {
+                            if(result == 'ERROR')
+                            {
+                                alert('An error has occured, please try again');
+                            }
+                            else
+                            {
+                                calendar.fullCalendar('refetchEvents');
+                            }         
+                        });
+                     }      
+               }                         
+            }, 
+            editable: false,
+            events: function(start, end, callback) {
+                // using jscript remoting to pull sf booking data
+                var s = $.fullCalendar.formatDate( start, 'MM-dd-yyyy hh:mm:ss' );
+                var e = $.fullCalendar.formatDate( end, 'MM-dd-yyyy hh:mm:ss' );
+                
+                SYN_eventsJSONController.getBookings(s,e,'equipment',sel, function(result,event){
+                    events = [];
+                    if(result != null){
+                            for(i=0;i<result.length;i++){
+                                
+                                events.push({ title: (result[i].UserIsOwner__c == 'TRUE')?'[X] ' + result[i].CreatedBy.Name:result[i].UserIsOwner__c, //Can't use CreatedBy.Name??
+                                              start: result[i].start__c,
+                                              end: result[i].end__c,
+                                              allDay : false,
+                                              color: (result[i].UserIsOwner__c == 'TRUE')?'blue':'#333333',
+                                              editable: (result[i].UserIsOwner__c == 'TRUE')?true:false,
+                                              id:result[i].Id,
+                                              isOwner:result[i].UserIsOwner__c,
+                                              tooltip: 'Click on the X to delete',
+                                              userID:result[i].CreatedById,
+                                              program:'To Do',
+                                            });
+                            }
+                    }
+                    callback(events);
+                },{escape:true});
+            }
+        
+        });
+    });
+    
+    
+</script>
+<style type='text/css'>
+
+    body {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        }
+
+    #calendar {
+        width: 900px;
+        margin: 0 auto;
+        }
+
+</style>
+</head>
+  <apex:insert name="header">
+    <c:SYN_SiteHeader />
+    <hr/>
+  </apex:insert>
+  
+  <apex:insert name="body"/>
+  <div id="dialog-message" title="Attention:">
+      <p><font size="-1">{!resourceNotes}</font></p>
+</div>    
+        <apex:form id="theform">
+        <apex:outputPanel id="sel">
+            <script>
+                function setVar(){
+                    //alert('In setVar');
+                    sel = document.getElementById('equipmentbooking:theform:theSelection').value;
+                    window.location.href ="/SYN_Home_EquipBook?type=equipment&r=" + sel;
+                    //$(document).fullCalendar('refetchEvents');
+                };
+            </script>
+        </apex:outputPanel>
+          <table width="1000px" id="theTable">
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <h2>{!resourceLabel}</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <font size="-2">INSTRUCTIONS:<br/>Make a booking: Select the timeslots that you want to book<br/>Modify a booking: Stretch or drag your booking
+                            | Delete a booking: Click on the X to delete</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="200px">
+                        <font size="-1">Select the Equipment you'd like to book:<br/><br/></font>
+                                <apex:selectList value="{!resourceId}" multiselect="false" size="1" id="theSelection" onchange="setVar();">
+                                    <apex:selectOptions value="{!choices}"/>
+                                </apex:selectList>
+                                <p></p>
+                                <font size="-1">{!resourceNotes}</font>
+                                
+                    </td>
+                    <td width="800px">
+                        <div id='calendar'></div>
+                    </td>
+                    <apex:outputPanel id="panel"></apex:outputPanel>
+                </tr>
+            </table>
+    </apex:form>
+    
+  <apex:insert name="footer">
+    <hr/>
+    <c:SiteFooter />
+  </apex:insert>
+</apex:page>

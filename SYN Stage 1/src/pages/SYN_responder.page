@@ -1,0 +1,11 @@
+<apex:page controller="SYN_responderController" sidebar="false" standardStylesheets="false" showHeader="false" action="{!processResponse}">
+
+<h1></h1>
+Response received. Thank you for coming back to us :)
+
+You will also be sent an email confirming your response.
+
+Cheers,
+The SYN Team
+<!-- End Default Content REMOVE THIS -->
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page controller="SYN_eventsJSONController"
+  contentType="application/x-JavaScript; charset=utf-8" showHeader="false" standardStylesheets="false" sidebar="false">
+  [
+  <apex:repeat value="{!bookings}" var="b" >{
+title:'{!b.name}',
+start: {!b.start__c},
+end: {!b.end__c},
+allDay: false,
+color: '#36C',
+url:'{!b.id}'
+}
+</apex:repeat>
+]
+</apex:page>

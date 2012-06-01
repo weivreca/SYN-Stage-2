@@ -1,0 +1,11 @@
+<apex:component id="headerComponent">
+    <table width="1000px">
+        <tr>
+            <td><apex:image url="{!URLFOR($Resource.SYN_Resources, 'images/synfm_logo.png')}"/></td>
+        </tr>
+        <tr>
+            <td><a href="SYN_Home">Home</a> | <a href="SYN_Home_StudioBook?type=studio">Studio Booking</a> | <a href="SYN_Home_EquipBook?type=equipment">Equipment Booking</a>
+             | <apex:outputLink value="{!$Site.Prefix}/secur/logout.jsp" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">{!$Label.site.logout}</apex:outputLink></td>
+        </tr>
+    </table>
+</apex:component>

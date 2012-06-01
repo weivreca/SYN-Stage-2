@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>FirstDonationDate__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>First Donation Date</label>
+        <summarizedField>Opportunity.CloseDate</summarizedField>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Opportunity.Amount</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>min</summaryOperation>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>LastDonationDate__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Last Donation Date</label>
+        <summarizedField>Opportunity.CloseDate</summarizedField>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Opportunity.Amount</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>max</summaryOperation>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>LifetimeDonationHistory_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Lifetime Donation History (Amount)</label>
+        <summarizedField>Opportunity.Amount</summarizedField>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>LifetimeDonationHistory_Number__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Lifetime Donation History (Number)</label>
+        <summaryFilterItems>
+            <field>Opportunity.IsWon</field>
+            <operation>equals</operation>
+            <value>TRUE</value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Opportunity.Amount</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>One2OneContact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>_SYSTEM: One2OneContact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Account</relationshipLabel>
+        <relationshipName>Organizations</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>SYSTEMIsIndividual__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>_SYSTEM: IsIndividual</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SYSTEM_AccountType__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>System field: do not use or change.</inlineHelpText>
+        <label>_SYSTEM: AccountType</label>
+        <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

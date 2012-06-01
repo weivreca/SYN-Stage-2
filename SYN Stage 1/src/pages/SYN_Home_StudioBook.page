@@ -1,0 +1,99 @@
+<apex:page showHeader="false" id="studiobooking" standardStylesheets="false"  controller="SYN_eventsJSONController">
+<head>
+<apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'SiteStyles.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_UITheme)}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.css')}"/>
+<!--<apex:stylesheet value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.print.css')}"/>-->
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-1.7.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'jquery/jquery-ui-1.8.17.custom.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SYN_FullCalendar, 'fullcalendar/fullcalendar.min.js')}"/>
+<script type='text/javascript'>
+    //$j = jQuery.noConflict();
+    $(document).ready(function() {
+    
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'agendaWeek'
+            },
+            defaultView: 'agendaWeek',
+            slotMinutes:60,
+            selectable: true,
+            selectHelper: true,
+            select: function(start, end, allDay) {
+                var sdt = $.fullCalendar.formatDate( start, 'MM-dd-yyyy HH:mm:ss' );
+                var edt = $.fullCalendar.formatDate( end, 'MM-dd-yyyy HH:mm:ss' );
+                
+                window.location.href ="/SYN_Home_BookingPage?start=" + encodeURIComponent(sdt) + "&end=" + encodeURIComponent(edt) + "&title=New Booking&type=studio";
+
+                calendar.fullCalendar('unselect');
+            },
+            editable: false,
+            events: function(start, end, callback) {
+                // using jscript remoting to pull sf booking data
+                var s = $.fullCalendar.formatDate( start, 'MM-dd-yyyy HH:mm:ss' );
+                var e = $.fullCalendar.formatDate( end, 'MM-dd-yyyy HH:mm:ss' );
+                SYN_eventsJSONController.getBookings(s,e,'studio',function(result,event){
+                    events = [];
+                    for(i=0;i<result.length;i++){
+                        events.push({ title: '',
+                                      start: result[i].start__c,
+                                      end: result[i].end__c,
+                                      allDay : false,
+                                      color: '#E52536',
+                                    });
+                    }
+                    callback(events);
+                },{escape:true});
+            }
+        
+        });
+    });
+</script>
+<style type='text/css'>
+
+    body {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        }
+
+    #calendar {
+        width: 900px;
+        margin: 0 auto;
+        }
+
+</style>
+</head>
+  <apex:insert name="header">
+    <c:SYN_SiteHeader />
+    <hr/>
+  </apex:insert>
+  <apex:insert name="body"/>
+  <apex:form id="theform">
+  		  
+		  <table width="1000px">
+		        <tr>
+		            <td width="200px">
+		            	<apex:selectList value="{!resourceId}" multiselect="false" size="1" id="cName" >
+		            		<apex:selectOptions value="{!choices}"/>
+		            	</apex:selectList>
+		            </td>
+		            <td width="800px"><div id='calendar'></div></td>
+		        </tr>
+		        
+		    </table>
+	</apex:form>
+  <apex:insert name="footer">
+    <hr/>
+    <c:SiteFooter />
+    <site:googleAnalyticsTracking />
+  </apex:insert>
+</apex:page>
