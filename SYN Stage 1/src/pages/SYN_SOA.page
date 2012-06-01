@@ -42,19 +42,36 @@
                     events = [];
                     if(result != null){
                             for(i=0;i<result.length;i++){
-                                
-                                events.push({ title: (result[i].UserIsOwner__c == 'TRUE')?'[X] ' + result[i].Booking_Name__c + '\n' + result[i].Program__r.Name
-                                					 :result[i].Booking_Name__c + '\n' + result[i].Program__r.Name,
+                                var statusColour;
+                                var statusTextColour;
+                                if(result[i].SOA_Booking_Status__c == 'Open')
+                                {
+                                	statusColour = 'green';
+                                	statusTextColour = 'white';
+                               	}
+                               	else if(result[i].SOA_Booking_Status__c == 'On Hold')
+                               	{
+                               		statusColour = 'yellow';
+                               		statusTextColour = 'black';
+                               	}
+                               	else
+                               	{
+                               		statusColour = 'grey';
+                               		statusTextColour = 'white';
+                           		}
+                               			
+                                events.push({ title: 'SOA Booking',
                                               start: result[i].start__c,
                                               end: result[i].end__c,
                                               allDay : false,
-                                              color: (result[i].UserIsOwner__c == 'TRUE')?'blue':'#333333',
-                                              editable: (result[i].UserIsOwner__c == 'TRUE')?true:false,
+                                              color: statusColour,
+                                              textColor: statusTextColour,
+                                              //editable: (result[i].UserIsOwner__c == 'TRUE')?true:false,
                                               id:result[i].Id,
                                               isOwner:result[i].UserIsOwner__c,
                                               tooltip: 'Click on the X to delete',
                                               userID:result[i].CreatedById,
-                                              program:result[i].Program__r.Name,
+                                              //program:result[i].Program__r.Name,
                                             });
                             }
                     }
